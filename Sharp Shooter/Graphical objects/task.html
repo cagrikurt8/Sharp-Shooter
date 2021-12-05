@@ -1,0 +1,54 @@
+<h5>Description</h5>
+
+<p>The game that we will develop in this project can be described as follows:</p>
+
+<ul>
+    <li>There's a fixed target in the center of the playing field;</li>
+    <li>Players use the keyboard to move the gun sight to the center of the target;</li>
+    <li>Players can make a shot by aiming and pressing the fire button;</li>
+    <li>The closer the shot to the center of the target, the more points players get;</li>
+    <li>The goal of this game is to score as many points as possible for a limited number of attempts.</li>
+</ul>
+
+<p>We will also add special effects to decrease the shooting precision.</p>
+
+<p>In the first stage, we will create a game field and several graphical objects.</p>
+
+<p>You need to construct three graphical objects:</p>
+
+<ul>
+    <li><code class="java">Target</code> is a family of concentric circles. The main target always stays still;</li>
+    <li><code class="java">Gun Sight</code> indicates the location of the sight;</li>
+    <li><code class="java">Bullet Hole</code> points a gunfire trace. They will appear once the shot has been fired.</li>
+</ul>
+
+<h5>Objectives</h5>
+
+<p>Create the main window of the program in two parts:</p>
+
+<ul>
+    <li><code class="java">Statusbar</code> – a <code class="java">JLabel</code>. Due to testing reasons, name it <code class="java">Statusbar</code>. The <code class="java">Statusbar</code> informs players about various events, so it will contain some text;</li>
+    <li><code class="java">Canvas</code> extends a <code class="java">JPanel</code>. Due to testing reasons, name it <code class="java">Canvas</code>. The <code class="java">Canvas</code> should have input focus.</li>
+</ul>
+
+<p>Draw the <code class="java">Target</code> on the <code class="java">Canvas</code> with the following requirements:</p>
+
+<p><img alt="" height="743" name="Example1.png" src="https://ucarecdn.com/5bdb187d-0571-4407-b76e-eae8d373c9c9/" width="706"></p>
+
+<ul>
+    <li>The center of the <code class="java">Target</code> should be at <code class="java">(350, 350)</code>;</li>
+    <li>The <code class="java">Target</code> should contain ten concentric circles with an increment in the radius of 30 pixels;</li>
+    <li>Use <code class="java">Color.BLACK</code> and <code class="java">Color.WHITE</code> as colors of the <code class="java">Target</code>. Utilize them as shown in Example 1;</li>
+    <li>Use <code class="java">Color.DARK_GRAY</code> as the <code class="java">Target</code> background color;</li>
+    <li>Insert the <code class="java">Target</code> into the <code class="java">Canvas</code> without clipping.</li>
+</ul>
+
+<p>Don't forget to draw a <code class="java">Bullet Hole</code> on the <code class="java">Canvas</code> with the center at <code class="java">(300, 500)</code> in a color that is different from <code class="java">Color.BLACK</code>, <code class="java">Color.WHITE</code>, and <code class="java">Color.DARK_GRAY</code>. You can define the size of a <code class="java">Bullet Hole</code> as you'd like. As an option, it may be a circle with a radius of 5 pixels.</p>
+
+<p>Draw the <code class="java">Gun Sight</code> at your discretion. You can copy Example 1 if you want.</p>
+
+<h5>Examples</h5>
+
+<p><strong>Example 1:</strong> <em>a possible result</em></p>
+
+<p><img alt="" height="743" name="Example2.png" src="https://ucarecdn.com/70048b7a-330a-4c1b-bd3c-4aaf910ee59a/" width="706"></p>

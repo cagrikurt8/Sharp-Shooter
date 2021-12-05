@@ -1,0 +1,40 @@
+<h5>Description</h5>
+
+<p>Our game is all about shooting, right? Let's add this feature to the game. The shooting process consists of two parts: aiming &amp; firing The graphical object <code class="java">Gun Sight</code> is responsible for aiming. In the previous stage, we have learned how we can draw it. Now, you need to make the <code class="java">Gun Sight</code> move under player control.</p>
+
+<p>Let's choose the arrow buttons to control the movement of the <code class="java">Gun Sight</code>. Once players press an arrow key, the sight moves to a new location. Once the aiming is complete, players need to press the space button to fire a shot. As a result, the game must display the mark on the target <code class="java">Bullet Hole</code>. All bullet holes should remain on the screen.</p>
+
+<p>Each time the position of the <code class="java">Gun Sight</code> changes or a new <code class="java">Bullet Hole</code> appears, the <code class="java">Canvas</code> must be updated as follows:</p>
+
+<ol>
+    <li>Draw the <code class="java">Target</code> on the <code class="java">Canvas</code> as in the previous stage;</li>
+    <li>Draw <code class="java">Bullet Holes</code> on the <code class="java">Canvas</code>;</li>
+    <li>Draw the <code class="java">Gun Sight</code> on the <code class="java">Canvas</code>.</li>
+</ol>
+
+<p>At the beginning of the program, you may create images for the <code class="java">Target</code>, <code class="java">Gun Sight</code>, and <code class="java">Bullet Hole</code> and place them in separate <code class="java">BufferedImage</code> variables. You can opt for <code class="java">drawImage</code> in the predefined <code class="java">paintComponent</code> method of <code class="java">Canvas</code>.</p>
+
+<h5>Objectives</h5>
+
+<p>Implement the components and display them on the <code class="java">Canvas</code>. The <code class="java">Target</code> must satisfy the requirements of the previous stage. For testing purposes, the initial position of the <code class="java">Gun Sight</code> must be at the center of <code class="java">Target</code>. Be careful! The centers of those objects should coincide.</p>
+
+<p>Implement the following keys to control the position of <code class="java">Gun Sight</code>:</p>
+
+<ul>
+    <li><code class="java">VK_UP</code> moves it to the up by 10 pixels;</li>
+    <li><code class="java">VK_DOWN</code> moves it to the down by 10 pixels;</li>
+    <li><code class="java">VK_LEFT</code> moves it to the left by 10 pixels;</li>
+    <li><code class="java">VK_RIGHT</code> moves it to the right by 10 pixels.</li>
+</ul>
+
+<p>The <code class="java">Gun Sight</code> is limited by the screen. Due to testing reasons, limit the horizontal and vertical coordinates of the center of the <code class="java">Gun Sight</code> in the range from <code class="java">40</code> to <code class="java">660</code>.</p>
+
+<p><img alt="" height="743" name="Example 2_1.png" src="https://ucarecdn.com/68805211-9325-4613-bab3-4911781cfb2b/" width="706"></p>
+
+<p>A new <code class="java">Bullet Hole</code> should appear every time players press the space bar. As in the previous stage, the color of bullets holes must be different from <code class="java">Color.BLACK</code>, <code class="java">Color.WHITE</code>, <code class="java">Color.DARK_GRAY</code>.</p>
+
+<h5>Examples</h5>
+
+<p><strong>Example 1:</strong><em> a possible result</em></p>
+
+<p><img alt="" height="743" name="Example2_2.gif" src="https://ucarecdn.com/b00bd157-ed19-4b0c-a2f4-7166721ba208/" width="706"></p>

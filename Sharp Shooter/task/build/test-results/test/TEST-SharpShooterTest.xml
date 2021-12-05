@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="SharpShooterTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-12-05T13:44:37" hostname="DESKTOP-8MHDMUI" time="26.453">
+  <properties/>
+  <testcase name="start" classname="SharpShooterTest" time="26.453"/>
+  <system-out><![CDATA[?[1;31m
+Start test 1?[0m
+?[1;31m
+Start test 2?[0m
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

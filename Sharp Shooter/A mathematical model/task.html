@@ -1,0 +1,35 @@
+<h5>Description</h5>
+
+<p>Let’s implement logic in our game. Take a look at the figure below:<br>
+    <img alt="" src="Figure 3_1.png"></p>
+
+<p style="text-align: center;"><img alt="" height="345" name="3.svg" src="https://ucarecdn.com/74f11531-ed3e-4777-aab5-930441db2568/" width="632"></p>
+
+<p><br>
+    The game comprises three stages:</p>
+
+<ol>
+    <li><code class="java">START</code>. At this stage, we prepare all required variables (for instance, the <code class="java">Number of attempts</code>), the game screen, and limit the movement of the <code class="java">Gun Sight</code>. Go to the next level by pressing the space bar;</li>
+    <li><code class="java">GAME</code>. That's where the actual gameplay starts — register keyboard events and move the <code class="java">Gun Sight</code>. Every time players press the space bar, add a <code class="java">Bullet Hole</code> on the <code class="java">Canvas</code> and decrement the <code class="java">Number of attempts</code> variable. When the <code class="java">Number of attempts</code> reaches zero, move to the next stage;</li>
+    <li><code class="java">END</code>. Gameplay stops here. Stop the <code class="java">Gun Sight</code> movement and no more <code class="java">Bullet Holes</code>. Put the final results on the screen.</li>
+</ol>
+
+<p>Speaking of the results, we need to evaluate the shooting accuracy. It is logical to assume that the closer you get to the center of the target, the higher the reward. Accordingly, a hit in the central circle scores 10 points; the last outer circle gives 1 point. The circles are in inverse proportion to their distances from the center. The current information is displayed on the <code class="java">Statusbar</code>.</p>
+
+<h5>Objectives</h5>
+
+<p>Limit the gameplay to 12 attempts. The requirements of on-screen graphical objects remain the same as in the previous stages. For testing purposes, the initial position of the <code class="java">Gun Sight</code> must be at the center of the <code class="java">Target</code>. Display the information about the game state in the <code class="java">Statusbar</code> as follows:</p>
+
+<ul>
+    <li>At the <code class="java">START</code>, display the following text: <code class="java">Press the SPACE bar to start the game</code>;</li>
+    <li>During the <code class="java">GAME</code> phase, display <code class="java">Bullets left: {1}, your score: {2} ({3})</code>. Where <code class="java">{1}</code> is the number of remaining attempts, <code class="java">{2}</code> is the total score, <code class="java">{3}</code> is the last score;</li>
+    <li>In the <code class="java">END</code>, display <code class="java">Game over, your score: {1}.</code> Where <code class="java">{1}</code> is a total score.</li>
+</ul>
+
+<h5>Example</h5>
+
+<p><strong>Example 1:</strong> <em>an example of scoring after four firings</em></p>
+
+<p><img alt="" height="743" name="Example 3_1.png" src="https://ucarecdn.com/134805bc-881e-4df2-a14b-16760036fe0f/" width="706"></p>
+
+<p><img alt="" src="Example 3_1.png"></p>

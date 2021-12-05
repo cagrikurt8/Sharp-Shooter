@@ -1,0 +1,36 @@
+<h5>Description</h5>
+
+<p>Our game is too simple. There are a couple of things that we can work on.</p>
+
+<p>First, in the real world, laws of physics influence the movement of objects. Remember physics in middle school? Any movement has acceleration. Objects don’t start or stop instantaneously; instead, it takes time to speed up and slow down. The following figures show the difference between the movement in our program and the movement with acceleration:</p>
+
+<p style="text-align: center;"><img alt="" height="341" name="1 (4).svg" src="https://ucarecdn.com/c5cca35b-1138-4cb9-a0dd-9aef3f3c093a/" width="563"></p>
+
+<p style="text-align: center;"><img alt="" height="341" name="2 (4).svg" src="https://ucarecdn.com/c0f0b71c-295c-45cb-aa14-c9190c3ea7a4/" width="563"></p>
+
+<p>So far, when we move the <code class="java">Gun Sight</code>, for instance, to the right, we increase the horizontal coordinate once <code class="java">(x += 10)</code> and update the screen. To simulate an accelerated motion, we have to change this algorithm. We should create a sequence of changes to the horizontal variable, for instance, <code class="java">(1, 2, 4, 2, 1)</code>. For each element of this collection, we should do the following operations:</p>
+
+<ul>
+    <li><code class="java">x += 10</code>;</li>
+    <li><code class="java">update screen</code>;</li>
+</ul>
+
+<p>Second, in real life, hitting a target requires particular skills and composure. Hands are shaking, the wind is blowing, the gun can misfire. A lot of factors. Under Newton’s second law, force produces motion with acceleration. That is, you can apply the algorithm discussed above.</p>
+
+<p>Above, we have discussed only one example of how you can apply the acceleration feature. You can implement any variation that you want.</p>
+
+<h5>Objectives</h5>
+
+<p>To complete the stage, please, comply with the following:</p>
+
+<ul>
+    <li>The requirements of constructing graphical objects remain the same as in the previous stages;</li>
+    <li>For testing purposes, the initial position of the <code class="java">Gun Sight</code> center should be at <code class="java">(100, 100)</code>;</li>
+    <li>The main idea of this stage is to make the accuracy of shooting as hard as possible.</li>
+</ul>
+
+<h5>Examples</h5>
+
+<p><strong>Example 1:</strong> <em>an</em> <em>example of firing</em></p>
+
+<p><img alt="" height="753" name="Example 4_1.gif" src="https://ucarecdn.com/97182421-e37c-47b8-9a52-6a2322016c16/" width="706"></p>

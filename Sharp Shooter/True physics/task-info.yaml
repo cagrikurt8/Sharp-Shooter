@@ -1,0 +1,411 @@
+type: edu
+files:
+- name: src/shooter/SharpShooter.java
+  visible: true
+  text: |-
+    package shooter;
+
+    import javax.swing.*;
+
+    public class SharpShooter extends JFrame {
+        public SharpShooter() {
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setSize(300, 300);
+            setVisible(true);
+            setLayout(null);
+        }
+    }
+  learner_created: false
+- name: src/shooter/ApplicationRunner.java
+  visible: true
+  text: |
+    package shooter;
+
+    public class ApplicationRunner {
+        public static void main(String[] args) {
+            new SharpShooter();
+        }
+    }
+  learner_created: false
+- name: test/SharpShooterTest.java
+  visible: false
+  text: |
+    import org.assertj.swing.fixture.JLabelFixture;
+    import org.assertj.swing.fixture.JPanelFixture;
+    import org.assertj.swing.image.ScreenshotTaker;
+    import org.hyperskill.hstest.dynamic.DynamicTest;
+    import org.hyperskill.hstest.exception.outcomes.WrongAnswer;
+    import org.hyperskill.hstest.stage.SwingTest;
+    import org.hyperskill.hstest.testcase.CheckResult;
+    import org.hyperskill.hstest.testing.swing.SwingComponent;
+    import shooter.SharpShooter;
+
+    import java.awt.*;
+    import java.awt.image.BufferedImage;
+    import java.text.MessageFormat;
+
+    import static java.awt.event.KeyEvent.*;
+    import static org.hyperskill.hstest.testcase.CheckResult.correct;
+
+    public class SharpShooterTest extends SwingTest {
+
+      public SharpShooterTest() {
+        super(new SharpShooter());
+      }
+
+      private static final int TARGET_CIRCLE_STEP = 30;
+      private static final int TARGET_CENTER = 350;
+      private static final int SIGHT_RADIUS = 40;
+      private static final int MOVE_STEP = 10;
+
+      private static final int START_X = 100;
+      private static final int START_Y = 100;
+
+      @SwingComponent
+      private JPanelFixture canvas;
+
+      @SwingComponent
+      private JLabelFixture statusbar;
+
+
+      @DynamicTest(feedback = "It should be difficult to score 10 points.")
+      CheckResult test1() {
+
+          canvas.pressKey(VK_SPACE);
+          canvas.releaseKey(VK_SPACE);
+
+          for (int i = START_X; i < TARGET_CENTER; i += MOVE_STEP) {
+              canvas.pressKey(VK_RIGHT);
+              canvas.releaseKey(VK_RIGHT);
+          }
+          for (int i = START_Y; i < TARGET_CENTER; i += MOVE_STEP) {
+              canvas.pressKey(VK_DOWN);
+              canvas.releaseKey(VK_DOWN);
+          }
+
+          canvas.pressKey(VK_SPACE);
+          canvas.releaseKey(VK_SPACE);
+
+          assertEquals(false,
+            statusbar.text().toLowerCase().contains("your score: " + 10),
+            "It should be difficult to score 10 points." );
+
+          return correct();
+      }
+
+        @DynamicTest(feedback = "It should be impossible to return to the start point.")
+        CheckResult test2() {
+
+            for (int i = START_X; i < TARGET_CENTER; i += MOVE_STEP) {
+                canvas.pressKey(VK_LEFT);
+                canvas.releaseKey(VK_LEFT);
+            }
+            for (int i = START_Y; i < TARGET_CENTER; i += MOVE_STEP) {
+                canvas.pressKey(VK_UP);
+                canvas.releaseKey(VK_UP);
+            }
+
+            canvas.pressKey(VK_SPACE);
+            canvas.releaseKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+
+            assertEquals(false,
+                    checkBullet(screenshot, START_X, START_Y),
+                    "It should be impossible to return to the start point." );
+
+            return correct();
+        }
+
+      private BufferedImage takeScreenshot() {
+        var screenshotTaker = new ScreenshotTaker();
+        return screenshotTaker.takeScreenshotOf(canvas.target());
+      }
+
+      private boolean checkBullet(BufferedImage screenshot, int x, int y) {
+        return Color.BLACK.getRGB() != screenshot.getRGB(x, y) &&
+                Color.WHITE.getRGB() != screenshot.getRGB(x, y) &&
+                Color.DARK_GRAY.getRGB() != screenshot.getRGB(x, y);
+      }
+
+      private static void assertEquals(
+              final Object expected,
+              final Object actual,
+              final String error,
+              final Object... args) {
+
+        if (!expected.equals(actual)) {
+          final var feedback = MessageFormat.format(error, args);
+          throw new WrongAnswer(feedback);
+        }
+      }
+
+    }
+  learner_created: false
+- name: src/shooter/BulletHole.java
+  visible: true
+  text: |
+    package shooter;
+
+    import java.awt.*;
+    import java.awt.geom.Ellipse2D;
+    import java.awt.image.BufferedImage;
+
+    public class BulletHole {
+
+        private static final int bulletRadius = 5;
+
+        public static final BufferedImage IMAGE = createImage();
+
+        private static BufferedImage createImage() {
+            BufferedImage image = new BufferedImage(2*bulletRadius, 2*bulletRadius, BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g2 = image.createGraphics();
+            Ellipse2D ellipse = new Ellipse2D.Double(0, 0, 2*bulletRadius, 2*bulletRadius);
+            g2.setPaint(Color.CYAN);
+            g2.fill(ellipse);
+            g2.setPaint(Color.BLUE);
+            g2.draw(ellipse);
+
+            return image;
+        }
+    }
+  learner_created: true
+- name: src/shooter/Sight.java
+  visible: true
+  text: |
+    package shooter;
+
+    import java.awt.*;
+    import java.awt.geom.Ellipse2D;
+    import java.awt.geom.Line2D;
+    import java.awt.image.BufferedImage;
+
+    public class Sight {
+
+        private static final int sightRadius = 40;
+        private static final int sightInset = (int) (0.8 * sightRadius);
+        public static final BufferedImage IMAGE = createImage();
+
+        private static BufferedImage createImage() {
+            BufferedImage image = new BufferedImage(2*sightRadius, 2*sightRadius, BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g2 = image.createGraphics();
+
+            Ellipse2D ellipse = new Ellipse2D.Double(2, 2, 2*sightRadius - 4, 2*sightRadius - 4);
+            g2.setPaint(Color.RED);
+            g2.setStroke(new BasicStroke(5));
+            g2.draw(ellipse);
+
+            g2.setStroke(new BasicStroke(2));
+            Line2D line = new Line2D.Double(0, sightRadius, sightInset, sightRadius);
+            g2.draw(line);
+            line = new Line2D.Double(2 * sightRadius - sightInset, sightRadius, 2 * sightRadius, sightRadius);
+            g2.draw(line);
+            line = new Line2D.Double(sightRadius, 0, sightRadius, sightInset);
+            g2.draw(line);
+            line = new Line2D.Double(sightRadius, 2 * sightRadius - sightInset, sightRadius, 2 * sightRadius);
+            g2.draw(line);
+
+            return image;
+        }
+    }
+  learner_created: true
+- name: src/shooter/Canvas.java
+  visible: true
+  text: |
+    package shooter;
+
+    import javax.swing.*;
+    import java.awt.*;
+    import java.awt.event.KeyEvent;
+    import java.awt.event.KeyListener;
+    import java.awt.geom.Point2D;
+    import java.util.HashMap;
+    import java.util.function.DoubleBinaryOperator;
+
+    public class Canvas extends JPanel implements KeyListener {
+        int sightX = 310;
+        int sightY = 310;
+        int holeX;
+        int holeY;
+        boolean spacePressed = false;
+        HashMap<BulletHole, int[]> bulletHoleList = new HashMap<>();
+        int attempts = 12;
+        int score = 0;
+        int currScore = 0;
+        boolean gameStarted = false;
+
+        public Canvas() {
+            setName("Canvas");
+            setSize(700, 700);
+            setVisible(true);
+            setBackground(Color.DARK_GRAY);
+            setFocusable(true);
+            addKeyListener(this);
+        }
+
+        public void paint(Graphics g) {
+            super.paint(g);
+            g.drawImage(Target.IMAGE, 0, 0, null);
+            g.drawImage(Sight.IMAGE, sightX, sightY, null);
+            if (spacePressed) {
+                for (BulletHole hole: bulletHoleList.keySet()) {
+                    int x = bulletHoleList.get(hole)[0];
+                    int y = bulletHoleList.get(hole)[1];
+                    g.drawImage(hole.IMAGE, x, y, null);
+                }
+            }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (attempts == 0) {
+                return;
+            }
+
+            if (gameStarted) {
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    if (-10 < sightY - 10) {
+                        sightY -= 10;
+                    }
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    if (sightY + 10 < 630) {
+                        sightY += 10;
+                    }
+                } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    if (sightX + 10 < 630) {
+                        sightX += 10;
+                    }
+                } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    if (-10 < sightX - 10) {
+                        sightX -= 10;
+                    }
+                } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    spacePressed = true;
+                    holeX = sightX + 35;
+                    holeY = sightY + 35;
+                    bulletHoleList.put(new BulletHole(), new int[]{holeX, holeY});
+                    attempts--;
+                    setScore();
+                    if (attempts == 0) {
+                        endGame();
+                    } else {
+                        setStatusBar();
+                    }
+                }
+                repaint();
+            }
+
+            if (e.getKeyCode() == KeyEvent.VK_SPACE && !gameStarted) {
+                gameStarted = true;
+                setStatusBar();
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+
+        }
+
+        private void setScore() {
+            Point2D holeLocation = new Point2D.Double(holeX, holeY);
+            double dist = new Point2D.Double(345, 345).distance(holeLocation);
+
+            if (dist < 30) {
+                currScore = 10;
+            } else if (dist < 60) {
+                currScore = 9;
+            } else if (dist < 90) {
+                currScore = 8;
+            } else if (dist < 120) {
+                currScore = 7;
+            } else if (dist < 150) {
+                currScore = 6;
+            } else if (dist < 180) {
+                currScore = 5;
+            } else if (dist < 210) {
+                currScore = 4;
+            } else if (dist < 240) {
+                currScore = 3;
+            } else if (dist < 270) {
+                currScore = 2;
+            } else if (dist < 300) {
+                currScore = 1;
+            } else {
+                currScore = 0;
+            }
+
+            score += currScore;
+        }
+
+        private void setStatusBar() {
+            SharpShooter.setStatusBar(String.format("Bullets left: %d, your score: %d (%d). Use \u2192 \u2190 \u2191 \u2193 SPACE buttons.", attempts, score, currScore));
+        }
+
+        private void endGame() {
+            SharpShooter.setStatusBar(String.format("Game over, your score: %d", score));
+        }
+    }
+  learner_created: true
+- name: src/shooter/Target.java
+  visible: true
+  text: |
+    package shooter;
+
+    import java.awt.*;
+    import java.awt.geom.Ellipse2D;
+    import java.awt.image.BufferedImage;
+
+    public class Target {
+
+        private static final int imageWidth = 700;
+        private static final int imageHeight = 700;
+        private static final int radiusDiff = 30;
+
+        public static final BufferedImage IMAGE = createImage();
+
+        private static BufferedImage createImage() {
+            BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = image.createGraphics();
+            Font font = new Font("SansSerif", Font.BOLD, 24);
+
+            Rectangle rect = new Rectangle(0, 0, imageWidth, imageHeight);
+            g2.setPaint(Color.DARK_GRAY);
+            g2.fill(rect);
+
+            for (int i = 10; i > 0; i--) {
+                Ellipse2D ellipse = new Ellipse2D.Double(imageWidth/2 - i*radiusDiff, imageHeight/2 - i*radiusDiff, 2*i*radiusDiff, 2*i*radiusDiff);
+
+                Color innerColor;
+                Color borderColor;
+                if (i == 4 || i == 3 || i == 2) {
+                    innerColor = Color.WHITE;
+                    borderColor = Color.BLACK;
+                } else {
+                    innerColor = Color.BLACK;
+                    borderColor = Color.WHITE;
+                }
+
+                g2.setPaint(innerColor);
+                g2.fill(ellipse);
+
+                g2.setPaint(borderColor);
+                g2.draw(ellipse);
+            }
+            return image;
+        }
+    }
+  learner_created: true
+feedback_link: https://hyperskill.org/learn/step/17153#comment
+status: Solved
+feedback:
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">JetBrains
+    Academy</a> to continue learning.
+  time: Sun, 05 Dec 2021 13:45:04 UTC
+record: -1

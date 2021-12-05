@@ -1,0 +1,415 @@
+type: edu
+files:
+- name: src/shooter/SharpShooter.java
+  visible: true
+  text: |-
+    package shooter;
+
+    import javax.swing.*;
+
+    public class SharpShooter extends JFrame {
+        public SharpShooter() {
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setSize(300, 300);
+            setVisible(true);
+            setLayout(null);
+        }
+    }
+  learner_created: false
+- name: src/shooter/ApplicationRunner.java
+  visible: true
+  text: |
+    package shooter;
+
+    public class ApplicationRunner {
+        public static void main(String[] args) {
+            new SharpShooter();
+        }
+    }
+  learner_created: false
+- name: test/SharpShooterTest.java
+  visible: false
+  text: |
+    import org.assertj.swing.fixture.JPanelFixture;
+    import org.assertj.swing.image.ScreenshotTaker;
+    import org.hyperskill.hstest.dynamic.DynamicTest;
+    import org.hyperskill.hstest.exception.outcomes.WrongAnswer;
+    import org.hyperskill.hstest.stage.SwingTest;
+    import org.hyperskill.hstest.testcase.CheckResult;
+    import org.hyperskill.hstest.testing.swing.SwingComponent;
+    import shooter.SharpShooter;
+
+    import java.awt.*;
+    import java.awt.image.BufferedImage;
+    import java.text.MessageFormat;
+
+    import static java.awt.event.KeyEvent.*;
+    import static org.hyperskill.hstest.testcase.CheckResult.correct;
+
+    public class SharpShooterTest extends SwingTest {
+
+        private static final int TARGET_CIRCLE_STEP = 30;
+        private static final int TARGET_CENTER = 350;
+        private static final int SIGHT_RADIUS = 40;
+        private static final int MOVE_STEP = 10;
+
+        public SharpShooterTest() {
+            super(new SharpShooter());
+        }
+
+        @SwingComponent
+        private JPanelFixture canvas;
+
+        @DynamicTest(feedback = "Shoot at the center of the target.")
+        CheckResult test1() {
+
+            canvas.pressKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+            assertEquals(true,
+                    checkBullet(screenshot, TARGET_CENTER, TARGET_CENTER),
+                    "The point ({0}, {1}) was tested.", TARGET_CENTER, TARGET_CENTER);
+
+            return correct();
+        }
+
+        @DynamicTest(feedback = "Make 10 moves to the right and shoot.")
+        CheckResult test2() {
+
+            for (int i = 0; i < 10; i++) {
+                canvas.pressKey(VK_RIGHT);
+            }
+            canvas.pressKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+            assertEquals(true,
+                    checkBullet(screenshot, TARGET_CENTER, TARGET_CENTER),
+                    "The point ({0}, {1) was tested.", TARGET_CENTER, TARGET_CENTER);
+
+            assertEquals(true,
+                    checkBullet(screenshot, 10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER),
+                    "The point ({0}, {1}) was tested.", 10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER);
+
+            return correct();
+        }
+
+        @DynamicTest(feedback = "Make 10 moves to the up and shoot.")
+        CheckResult test3() {
+
+            for (int i = 0; i < 10; i++) {
+                canvas.pressKey(VK_UP);
+            }
+            canvas.pressKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+            assertEquals(true,
+                    checkBullet(screenshot, TARGET_CENTER, TARGET_CENTER),
+                    "The point ({0}, {1}) was tested.", TARGET_CENTER, TARGET_CENTER);
+
+            assertEquals(true,
+                    checkBullet(screenshot, 10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER),
+                    "The point ({0}, {1}) was tested.",10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER);
+
+            assertEquals(true,
+                    checkBullet(screenshot, 10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER - 10 * MOVE_STEP),
+                    "The point ({0}, {1}) was tested.", 10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER - 10 * MOVE_STEP);
+
+            return correct();
+        }
+
+        @DynamicTest(feedback = "Make 20 moves to the left and shoot.")
+        CheckResult test4() {
+
+            for (int i = 0; i < 20; i++) {
+                canvas.pressKey(VK_LEFT);
+            }
+            canvas.pressKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+            assertEquals(true,
+                    checkBullet(screenshot, TARGET_CENTER, TARGET_CENTER),
+                    "The point ({0}, {1}) was tested.", TARGET_CENTER, TARGET_CENTER);
+
+            assertEquals(true,
+                    checkBullet(screenshot, 10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER),
+                    "The point ({0}, {1}) was tested.",10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER);
+
+            assertEquals(true,
+                    checkBullet(screenshot, 10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER - 10 * MOVE_STEP),
+                    "The point ({0}, {1}) was tested.", 10 * MOVE_STEP + TARGET_CENTER, TARGET_CENTER - 10 * MOVE_STEP);
+
+            assertEquals(true,
+                    checkBullet(screenshot, TARGET_CENTER - 10 * MOVE_STEP, TARGET_CENTER - 10 * MOVE_STEP),
+                    "The point ({0}, {1}) was tested.", TARGET_CENTER - 10 * MOVE_STEP, TARGET_CENTER - 10 * MOVE_STEP);
+
+            return correct();
+        }
+
+        @DynamicTest(feedback = "Make 20 moves to the down and shoot.")
+        CheckResult test5() {
+
+            for (int i = 0; i < 20; i++) {
+                canvas.pressKey(VK_DOWN);
+            }
+            canvas.pressKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+            assertEquals(true,
+                    checkBullet(screenshot, 350, 350),
+                    "The point (350, 350) was tested.");
+
+            assertEquals(true,
+                    checkBullet(screenshot, 450, 350),
+                    "The point (250, 350) was tested.");
+
+            assertEquals(true,
+                    checkBullet(screenshot, 450, 250),
+                    "The point (450, 250) was tested.");
+
+            assertEquals(true,
+                    checkBullet(screenshot, 250, 250),
+                    "The point (250, 250) was tested.");
+
+            assertEquals(true,
+                    checkBullet(screenshot, 250, 450),
+                    "The point (250, 450) was tested.");
+
+            return correct();
+        }
+
+        @DynamicTest(feedback = "The cursor should not be outside the screen.")
+        CheckResult test6() {
+            for (int i = 0; i < 50; i++) {
+                canvas.pressKey(VK_DOWN);
+            }
+            for (int i = 0; i < 50; i++) {
+                canvas.pressKey(VK_RIGHT);
+            }
+            canvas.pressKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+            assertEquals(true,
+                    checkBullet(screenshot, 2 * TARGET_CENTER - SIGHT_RADIUS, 2 * TARGET_CENTER - SIGHT_RADIUS),
+                    "The point ({0}, {1}) was tested.", 2 * TARGET_CENTER - SIGHT_RADIUS, 2 * TARGET_CENTER - SIGHT_RADIUS);
+            return correct();
+        }
+
+        @DynamicTest(feedback = "The cursor should not be outside the screen.")
+        CheckResult test7() {
+            for (int i = 0; i < 80; i++) {
+                canvas.pressKey(VK_UP);
+            }
+            canvas.pressKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+            assertEquals(true,
+                    checkBullet(screenshot, 2 * TARGET_CENTER - SIGHT_RADIUS, SIGHT_RADIUS),
+                    "The point ({0}, {1}) was tested.", 2 * TARGET_CENTER - SIGHT_RADIUS, SIGHT_RADIUS);
+            return correct();
+        }
+
+        @DynamicTest(feedback = "The cursor should not be outside the screen.")
+        CheckResult test8() {
+            for (int i = 0; i < 80; i++) {
+                canvas.pressKey(VK_LEFT);
+            }
+            canvas.pressKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+            assertEquals(true,
+                    checkBullet(screenshot, SIGHT_RADIUS, SIGHT_RADIUS),
+                    "The point ({0}, {1}) was tested.", SIGHT_RADIUS, SIGHT_RADIUS);
+            return correct();
+        }
+
+        @DynamicTest(feedback = "The cursor should not be outside the screen.")
+        CheckResult test9() {
+            for (int i = 0; i < 80; i++) {
+                canvas.pressKey(VK_DOWN);
+            }
+            canvas.pressKey(VK_SPACE);
+
+            var screenshot = takeScreenshot();
+            assertEquals(true,
+                    checkBullet(screenshot, SIGHT_RADIUS, 2 * TARGET_CENTER - SIGHT_RADIUS),
+                    "The point ({0}, {1}) was tested.", SIGHT_RADIUS, 2 * TARGET_CENTER - SIGHT_RADIUS);
+            return correct();
+        }
+
+        private BufferedImage takeScreenshot() {
+            var screenshotTaker = new ScreenshotTaker();
+            return screenshotTaker.takeScreenshotOf(canvas.target());
+        }
+
+        private boolean checkBullet(BufferedImage screenshot, int x, int y) {
+            return Color.BLACK.getRGB() != screenshot.getRGB(x, y) &&
+                    Color.WHITE.getRGB() != screenshot.getRGB(x, y) &&
+                    Color.DARK_GRAY.getRGB() != screenshot.getRGB(x, y);
+        }
+
+        private static void assertEquals(
+                final Object expected,
+                final Object actual,
+                final String error,
+                final Object... args) {
+
+            if (!expected.equals(actual)) {
+                final var feedback = MessageFormat.format(error, args);
+                throw new WrongAnswer(feedback);
+            }
+        }
+    }
+  learner_created: false
+- name: src/shooter/BulletHole.java
+  visible: true
+  text: |
+    package shooter;
+
+    import java.awt.*;
+    import java.awt.geom.Ellipse2D;
+    import java.awt.image.BufferedImage;
+
+    public class BulletHole {
+
+        private static final int bulletRadius = 5;
+
+        public static final BufferedImage IMAGE = createImage();
+
+        private static BufferedImage createImage() {
+            BufferedImage image = new BufferedImage(2*bulletRadius, 2*bulletRadius, BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g2 = image.createGraphics();
+            Ellipse2D ellipse = new Ellipse2D.Double(0, 0, 2*bulletRadius, 2*bulletRadius);
+            g2.setPaint(Color.CYAN);
+            g2.fill(ellipse);
+            g2.setPaint(Color.BLUE);
+            g2.draw(ellipse);
+
+            return image;
+        }
+    }
+  learner_created: true
+- name: src/shooter/Sight.java
+  visible: true
+  text: |
+    package shooter;
+
+    import java.awt.*;
+    import java.awt.geom.Ellipse2D;
+    import java.awt.geom.Line2D;
+    import java.awt.image.BufferedImage;
+
+    public class Sight {
+
+        private static final int sightRadius = 40;
+        private static final int sightInset = (int) (0.8 * sightRadius);
+        public static final BufferedImage IMAGE = createImage();
+
+        private static BufferedImage createImage() {
+            BufferedImage image = new BufferedImage(2*sightRadius, 2*sightRadius, BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g2 = image.createGraphics();
+
+            Ellipse2D ellipse = new Ellipse2D.Double(2, 2, 2*sightRadius - 4, 2*sightRadius - 4);
+            g2.setPaint(Color.RED);
+            g2.setStroke(new BasicStroke(5));
+            g2.draw(ellipse);
+
+            g2.setStroke(new BasicStroke(2));
+            Line2D line = new Line2D.Double(0, sightRadius, sightInset, sightRadius);
+            g2.draw(line);
+            line = new Line2D.Double(2 * sightRadius - sightInset, sightRadius, 2 * sightRadius, sightRadius);
+            g2.draw(line);
+            line = new Line2D.Double(sightRadius, 0, sightRadius, sightInset);
+            g2.draw(line);
+            line = new Line2D.Double(sightRadius, 2 * sightRadius - sightInset, sightRadius, 2 * sightRadius);
+            g2.draw(line);
+
+            return image;
+        }
+    }
+  learner_created: true
+- name: src/shooter/Canvas.java
+  visible: true
+  text: |
+    package shooter;
+
+    import javax.swing.*;
+    import java.awt.*;
+
+    public class Canvas extends JPanel {
+
+        public Canvas() {
+            setName("Canvas");
+            setSize(700, 700);
+            setVisible(true);
+            setBackground(Color.DARK_GRAY);
+            setFocusable(true);
+        }
+
+        public void paint(Graphics g) {
+            super.paint(g);
+            g.drawImage(Target.IMAGE, 0, 0, null);
+            g.drawImage(BulletHole.IMAGE, 300, 495, null);
+            g.drawImage(Sight.IMAGE, 600, 20, null);
+        }
+    }
+  learner_created: true
+- name: src/shooter/Target.java
+  visible: true
+  text: |
+    package shooter;
+
+    import java.awt.*;
+    import java.awt.geom.Ellipse2D;
+    import java.awt.image.BufferedImage;
+
+    public class Target {
+
+        private static final int imageWidth = 700;
+        private static final int imageHeight = 700;
+        private static final int radiusDiff = 30;
+
+        public static final BufferedImage IMAGE = createImage();
+
+        private static BufferedImage createImage() {
+            BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = image.createGraphics();
+            Font font = new Font("SansSerif", Font.BOLD, 24);
+
+            Rectangle rect = new Rectangle(0, 0, imageWidth, imageHeight);
+            g2.setPaint(Color.DARK_GRAY);
+            g2.fill(rect);
+
+            for (int i = 10; i > 0; i--) {
+                Ellipse2D ellipse = new Ellipse2D.Double(imageWidth/2 - i*radiusDiff, imageHeight/2 - i*radiusDiff, 2*i*radiusDiff, 2*i*radiusDiff);
+
+                Color innerColor;
+                Color borderColor;
+                if (i == 4 || i == 3 || i == 2) {
+                    innerColor = Color.WHITE;
+                    borderColor = Color.BLACK;
+                } else {
+                    innerColor = Color.BLACK;
+                    borderColor = Color.WHITE;
+                }
+
+                g2.setPaint(innerColor);
+                g2.fill(ellipse);
+
+                g2.setPaint(borderColor);
+                g2.draw(ellipse);
+            }
+            return image;
+        }
+    }
+  learner_created: true
+- name: src/shooter/Controller.java
+  visible: true
+  learner_created: true
+feedback_link: https://hyperskill.org/learn/step/17151#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Sat, 04 Dec 2021 17:42:57 UTC
+record: 2
